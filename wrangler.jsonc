@@ -1,0 +1,47 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "edgecal",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2025-02-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    // Kept boolean `true` for Wrangler v3 compatibility so /ics/*.ics navigations hit the Worker.
+    // If you upgrade to Wrangler v4+, change this to ["/api/*", "/ics/*"] to bypass the Worker for static assets.
+    "run_worker_first": true
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "DIRECTORY_DO",
+        "class_name": "DirectoryDO"
+      },
+      {
+        "name": "HOST_SCHEDULER_DO",
+        "class_name": "HostSchedulerDO"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DirectoryDO", "HostSchedulerDO"]
+    }
+  ],
+  "send_email": [
+    {
+      "name": "SEND_EMAIL"
+    }
+  ],
+  "vars": {
+    "APP_NAME": "EdgeCal",
+    "ALLOW_SIGNUPS": "false",
+    "EMAIL_FROM": "bookings@example.com",
+    "EMAIL_FROM_NAME": "EdgeCal"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
